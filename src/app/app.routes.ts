@@ -5,7 +5,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { JwtGuard } from './_guard/jwt.guard';
 import { CompanyComponent } from './dashboard/company/company.component';
 import { LayoutComponent } from './dashboard/layout/layout.component';
-import { ProductComponent } from './dashboard/products/products.component';
+import { ProductComponent } from './dashboard/product/product.component';
 
 export const routes: Routes = [
     {

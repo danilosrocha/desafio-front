@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 
 export class ProductService {
-  private apiUrl = 'https://desafio.up.railway.app/api/companies';
+  private apiUrl = 'https://desafio.up.railway.app/api/products';
 
   constructor(private http: HttpClient) { }
 

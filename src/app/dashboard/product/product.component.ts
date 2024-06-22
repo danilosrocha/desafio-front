@@ -4,7 +4,8 @@ import { ButtonComponent } from '../../shared/components/button/button.component
 import { ModalComponent } from '../../shared/components/modal/modal.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { catchError, EMPTY, tap } from 'rxjs';
+import { catchError, EMPTY, forkJoin, of, tap } from 'rxjs';
+import { CompanyService } from '../../shared/services/company.service';
 @Component({
   selector: 'app-product',
   standalone: true,
@@ -19,15 +20,17 @@ export class ProductComponent {
   isDeleteModalVisible: boolean = false;
   action: IAction = 'CREATE';
   productForm: FormGroup;
+  products: any[] = [];
   companies: any[] = [];
   productToDelete: any | null = null; // Empresa a ser excluída
 
-  constructor(private fb: FormBuilder, private productService: ProductService) {
+  constructor(private fb: FormBuilder, private productService: ProductService, private companyService: CompanyService) {
     this.productForm = this.fb.group({
-      _id: ['', Validators.required],
-      corporateName: ['', Validators.required],
-      productName: ['', Validators.required],
-      cnpj: ['', Validators.required],
+      _id: [],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      price: ['', Validators.required],
+      company: ['', Validators.required],
     });
   }
 
@@ -58,12 +61,18 @@ export class ProductComponent {
     this.productToDelete = null;
   }
 
+  getCorporateNameForProduct(companyId: any): string {
+    const company = this.companies.find(e => e._id == companyId);
+
+    return company.corporateName;
+  }
+
   get modalText(): string {
     return this.action === 'CREATE' ? 'Cadastrar produto' : 'Atualizar produto';
   }
 
   get deleteModalText(): string {
-    return `Excluir produto "${this.productToDelete?.corporateName}"`;
+    return `Excluir produto "${this.productToDelete?.name}"`;
   }
 
   onSubmit() {
@@ -72,16 +81,18 @@ export class ProductComponent {
       formData.user = localStorage.getItem('userId');
 
       if (this.action === 'CREATE') {
-        this.productService.createProduct(formData).subscribe(
-          (response) => {
-            console.log('Empresa criada com sucesso:', response);
-            this.closeModal();
-            this.loadProducts(); // Atualiza a lista de produtos após criar uma nova
-          },
-          (error) => {
-            console.error('Erro ao criar produto:', error);
-          }
-        );
+        this.productService.createProduct(formData).pipe(
+          tap(() => {
+            this.closeModal(),
+              this.loadProducts()
+          }),
+          catchError((error) => {
+            console.error('Erro ao atualizar produto:', error);
+            return EMPTY;
+          })
+        ).subscribe(() => {
+          this.loadProducts();
+        });
       } else if (this.action === 'UPDATE') {
         this.updateProduct(this.productForm.value)
       }
@@ -90,23 +101,38 @@ export class ProductComponent {
 
 
   loadProducts() {
-    this.productService.getAllProducts()
-      .pipe(
+    forkJoin({
+      companies: this.companyService.getAllCompanies().pipe(
         tap((companies) => {
           console.log('Empresas carregadas:', companies);
         }),
-
+        catchError((error) => {
+          console.error('Erro ao carregar empresas:', error);
+          return of([]); // Retorna um observable vazio em caso de erro para evitar que o forkJoin falhe completamente
+        })
+      ),
+      products: this.productService.getAllProducts().pipe(
+        tap((products) => {
+          console.log('Produtos carregados:', products);
+        }),
         catchError((error) => {
           console.error('Erro ao carregar produtos:', error);
-          return EMPTY;
+          return of([]); // Retorna um observable vazio em caso de erro para evitar que o forkJoin falhe completamente
         })
       )
-      .subscribe(companies => {
+    }).subscribe({
+      next: ({ companies, products }) => {
         this.companies = companies;
-      });
+        this.products = products;
+      },
+      error: (error) => {
+        console.error('Erro no forkJoin:', error);
+      }
+    });
   }
 
   updateProduct(product: any) {
+
     this.productService.updateProduct(product._id, product).pipe(
       tap(() => this.closeModal()),
       catchError((error) => {

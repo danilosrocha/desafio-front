@@ -24,7 +24,7 @@ export class CompanyComponent {
 
   constructor(private fb: FormBuilder, private companyService: CompanyService) {
     this.companyForm = this.fb.group({
-      _id: ['', Validators.required],
+      _id: [],
       corporateName: ['', Validators.required],
       companyName: ['', Validators.required],
       cnpj: ['', Validators.required],
