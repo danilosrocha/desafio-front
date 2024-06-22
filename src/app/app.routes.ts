@@ -5,6 +5,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { JwtGuard } from './_guard/jwt.guard';
 import { CompanyComponent } from './dashboard/company/company.component';
 import { LayoutComponent } from './dashboard/layout/layout.component';
+import { ProductComponent } from './dashboard/products/products.component';
 
 export const routes: Routes = [
     {
@@ -28,7 +29,7 @@ export const routes: Routes = [
         children: [
             { path: '', component: HomeComponent },
             { path: 'empresa', component: CompanyComponent },
-            // { path: 'produto', component: ProdutoComponent },
+            { path: 'produto', component: ProductComponent },
             // { path: 'cliente', component: ClienteComponent }
         ],
         data: { isPrivate: true }

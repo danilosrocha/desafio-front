@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TitleComponent } from '../../shared/components/title/title.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',

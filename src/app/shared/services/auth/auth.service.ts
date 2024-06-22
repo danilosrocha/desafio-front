@@ -30,6 +30,7 @@ export class AuthService {
         return false;
       }
 
+      localStorage.setItem('userId', decodedToken?.sub);
       console.log('Token válido');
       return true;
     } catch (error) {
@@ -42,7 +43,8 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap(response => {
-          localStorage.setItem('token', response.token);
+          localStorage.setItem('token', response);
+          this.isAuthenticated()
         })
       );
   }

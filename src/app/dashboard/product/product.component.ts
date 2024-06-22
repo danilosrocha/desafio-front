@@ -1,4 +1,4 @@
-import { CompanyService } from './../../shared/services/company.service';
+import { ProductService } from '../../shared/services/product.service';
 import { Component } from '@angular/core';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
@@ -6,98 +6,98 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { catchError, EMPTY, tap } from 'rxjs';
 @Component({
-  selector: 'app-company',
+  selector: 'app-product',
   standalone: true,
   imports: [ButtonComponent, ModalComponent, CommonModule, ReactiveFormsModule],
-  templateUrl: './company.component.html',
-  styleUrl: './company.component.css'
+  templateUrl: './product.component.html',
+  styleUrl: './product.component.css'
 })
 
 
-export class CompanyComponent {
+export class ProductComponent {
   isModalVisible: boolean = false;
   isDeleteModalVisible: boolean = false;
   action: IAction = 'CREATE';
-  companyForm: FormGroup;
+  productForm: FormGroup;
   companies: any[] = [];
-  companyToDelete: any | null = null; // Empresa a ser excluída
+  productToDelete: any | null = null; // Empresa a ser excluída
 
-  constructor(private fb: FormBuilder, private companyService: CompanyService) {
-    this.companyForm = this.fb.group({
+  constructor(private fb: FormBuilder, private productService: ProductService) {
+    this.productForm = this.fb.group({
       _id: ['', Validators.required],
       corporateName: ['', Validators.required],
-      companyName: ['', Validators.required],
+      productName: ['', Validators.required],
       cnpj: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.loadCompanies();
+    this.loadProducts();
   }
 
-  openModal(action: IAction, company?: any) {
+  openModal(action: IAction, product?: any) {
     this.action = action;
     if (action === "UPDATE") {
-      this.companyForm.patchValue(company);
+      this.productForm.patchValue(product);
     }
     this.isModalVisible = true;
   }
 
   closeModal() {
     this.isModalVisible = false;
-    this.companyForm.reset();
+    this.productForm.reset();
   }
 
-  confirmDelete(company: any) {
-    this.companyToDelete = company;
+  confirmDelete(product: any) {
+    this.productToDelete = product;
     this.isDeleteModalVisible = true;
   }
 
   cancelDelete() {
     this.isDeleteModalVisible = false;
-    this.companyToDelete = null;
+    this.productToDelete = null;
   }
 
   get modalText(): string {
-    return this.action === 'CREATE' ? 'Cadastrar empresa' : 'Atualizar empresa';
+    return this.action === 'CREATE' ? 'Cadastrar produto' : 'Atualizar produto';
   }
 
   get deleteModalText(): string {
-    return `Excluir empresa "${this.companyToDelete?.corporateName}"`;
+    return `Excluir produto "${this.productToDelete?.corporateName}"`;
   }
 
   onSubmit() {
-    if (this.companyForm.valid) {
-      const formData = this.companyForm.value;
+    if (this.productForm.valid) {
+      const formData = this.productForm.value;
       formData.user = localStorage.getItem('userId');
 
       if (this.action === 'CREATE') {
-        this.companyService.createCompany(formData).subscribe(
+        this.productService.createProduct(formData).subscribe(
           (response) => {
             console.log('Empresa criada com sucesso:', response);
             this.closeModal();
-            this.loadCompanies(); // Atualiza a lista de empresas após criar uma nova
+            this.loadProducts(); // Atualiza a lista de produtos após criar uma nova
           },
           (error) => {
-            console.error('Erro ao criar empresa:', error);
+            console.error('Erro ao criar produto:', error);
           }
         );
       } else if (this.action === 'UPDATE') {
-        this.updateCompany(this.companyForm.value)
+        this.updateProduct(this.productForm.value)
       }
     }
   }
 
 
-  loadCompanies() {
-    this.companyService.getAllCompanies()
+  loadProducts() {
+    this.productService.getAllProducts()
       .pipe(
         tap((companies) => {
           console.log('Empresas carregadas:', companies);
         }),
 
         catchError((error) => {
-          console.error('Erro ao carregar empresas:', error);
+          console.error('Erro ao carregar produtos:', error);
           return EMPTY;
         })
       )
@@ -106,27 +106,27 @@ export class CompanyComponent {
       });
   }
 
-  updateCompany(company: any) {
-    this.companyService.updateCompany(company._id, company).pipe(
+  updateProduct(product: any) {
+    this.productService.updateProduct(product._id, product).pipe(
       tap(() => this.closeModal()),
       catchError((error) => {
-        console.error('Erro ao atualizar empresa:', error);
+        console.error('Erro ao atualizar produto:', error);
         return EMPTY;
       })
     ).subscribe(() => {
-      this.loadCompanies();
+      this.loadProducts();
     });
   }
 
-  deleteCompany() {
-    this.companyService.deleteCompany(this.companyToDelete._id).pipe(
+  deleteProduct() {
+    this.productService.deleteProduct(this.productToDelete._id).pipe(
       tap(() => this.cancelDelete()),
       catchError((error) => {
-        console.error('Erro ao excluir empresa:', error);
+        console.error('Erro ao excluir produto:', error);
         return EMPTY;
       })
     ).subscribe(() => {
-      this.loadCompanies();
+      this.loadProducts();
     });
   }
 }
