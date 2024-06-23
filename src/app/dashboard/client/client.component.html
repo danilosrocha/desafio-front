@@ -29,7 +29,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">{{ client.name }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ client.email }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ client.telephone }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ getCorporateNameForClient(client.company) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ getCorporateNameForClient(client.company._id) }}</td>
 
                     <td class="px-6 py-4 whitespace-nowrap text-right">
                         <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2" (click)="openModal('UPDATE', client)">

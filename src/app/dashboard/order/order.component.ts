@@ -51,8 +51,8 @@ export class OrderComponent {
   onCompanyChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     this.selectedCompanyId = selectElement.value;
-    this.filteredClients = this.clients.filter(client => client.company === this.selectedCompanyId);
-    this.filteredProducts = this.products.filter(product => product.company === this.selectedCompanyId);
+    this.filteredClients = this.clients.filter(client => client.company._id === this.selectedCompanyId);
+    this.filteredProducts = this.products.filter(product => product.company._id === this.selectedCompanyId);
     this.updateProductFormArray()
   }
 
