@@ -1,3 +1,17 @@
 <div class="container mx-auto gap-4 p-2 ">
-    <h3 class="text-center text-2xl font-semibold">Faça aqui sua gestão do seu comércio</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="bg-white mt-2 rounded-lg p-4 text-black flex flex-col" *ngFor="let order of orders">
+            <p class="text-sm">{{order.company.corporateName}}</p>
+            <p>Pedido: {{order.number}}</p>
+            <button (click)="openModal(order._id)" class="bg-green-400 rounded-md mt-4 p-2">Finalizar</button>
+        </div>
+    </div>
+
+    <app-modal text="Finalizar pedido" [isVisible]="isModalVisible" (closeModal)="closeModal()">
+        <p>Tem certeza que deseja finalizar este pedido?</p>
+        <div class="flex gap-2 justify-end mt-4">
+            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" (click)="finalize()">Confirmar</button>
+            <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" (click)="closeModal()">Cancelar</button>
+        </div>
+    </app-modal>
 </div>

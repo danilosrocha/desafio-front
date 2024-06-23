@@ -9,28 +9,32 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Nome
+                        Número
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Descrição
+                        Observação
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Preço
+                        Data
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Empresa
                     </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Cliente
+                    </th>
                     <th scope="col">
+
                     </th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <tr *ngFor="let order of orders">
-                    <td class="px-6 py-4 whitespace-nowrap">{{ order.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ order.number }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ order.observation }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ order.date }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ getCorporateNameForOrder(order.customer) }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ getCorporateNameForOrder(order.company) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ convertDateTimeSimple(order.date) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ order.company.corporateName }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ getClientNameOrder(order.customer) }}</td>
 
                     <td class="px-6 py-4 whitespace-nowrap text-right">
                         <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2" (click)="openModal('UPDATE',order)">
@@ -47,37 +51,47 @@
 
     <app-modal [text]="modalText" [isVisible]="isModalVisible" (closeModal)="closeModal()">
         <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
-            <div class="mb-2">
-                <label class="text-md font-semibold mb-2" for="number">Número:</label>
-                <input class="border rounded w-full py-2 px-3 text-gray-700" type="number" id="number" formControlName="number" />
-            </div>
+
             <div class="mb-2">
                 <label class="text-md font-semibold mb-2" for="observation">Observação:</label>
                 <input class="border rounded w-full py-2 px-3 text-gray-700" id="observation" formControlName="observation" />
             </div>
             <div class="mb-2">
-                <label class="text-md font-semibold mb-2" for="date">Dia:</label>
-                <input class="border rounded w-full py-2 px-3 text-gray-700" type="datetime-local" id="date" formControlName="date" />
-            </div>
-
-            <div class="mb-2">
-                <label class="text-md font-semibold mb-2" for="client">Selecione o Cliente:</label>
-                <select class="border rounded w-full py-2 px-3 text-gray-700" id="client" formControlName="customer">
-                    <option *ngFor="let client of clients" [value]="client._id">{{ client.name }}</option>
-                </select>
+                <label class="text-md font-semibold mb-2" for="date">Data:</label>
+                <input class="border rounded w-full py-2 px-3 text-gray-700" type="datetime-local" id="date" formControlName="date" [min]="minDateTime" />
             </div>
 
             <div class="mb-2">
                 <label class="text-md font-semibold mb-2" for="company">Selecione a Empresa:</label>
-                <select class="border rounded w-full py-2 px-3 text-gray-700" id="company" formControlName="company">
+                <select class="border rounded w-full py-2 px-3 text-gray-700" id="company" formControlName="company" (change)="onCompanyChange($event)">
                     <option *ngFor="let company of companies" [value]="company._id">{{ company.corporateName }} </option>
                 </select>
+            </div>
+
+            <div class="mb-2" *ngIf="selectedCompanyId">
+                <label class="text-md font-semibold mb-2" for="customer">Selecione o Cliente:</label>
+                <select class="border rounded w-full py-2 px-3 text-gray-700" id="customer" formControlName="customer">
+                    <option *ngFor="let customer of filteredClients" [value]="customer._id">{{ customer.name }}</option>
+                </select>
+            </div>
+
+            <div class="mb-2" *ngIf="selectedCompanyId">
+                <label class="text-md font-semibold mb-2" for="products">Selecione os produtos:</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center p-2" formArrayName="products">
+                    <div class="rounded-md bg-blue-400 p-4 flex flex-col justify-center items-center" *ngFor="let productControl of productsArray.controls; let i = index" [formGroupName]="i">
+                        <div class="mb-2">{{ filteredProducts[i].name }}</div>
+                        <input type="number" min="0" class="border rounded w-20 py-2 px-3 text-gray-700" formControlName="quantity" placeholder="Quantidade">
+                    </div>
+                </div>
             </div>
 
             <div class="flex gap-2 justify-end">
                 <button class="bg-blue-950 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded" type="submit" [disabled]="orderForm.invalid">{{ action === 'CREATE' ? 'Cadastrar' : 'Atualizar' }}</button>
                 <button class="bg-red-500 hover:bg-red-400 text-white font-semibold py-2 px-4 rounded" (click)="closeModal()">Cancelar</button>
             </div>
+
+
+
         </form>
     </app-modal>
 

@@ -12,17 +12,24 @@
             <app-title class="text-white mb-20" text="Crie sua conta" />
             <div class="w-[70%] mx-auto ">
                 <div class="mb-2">
-                    <label class="block text-gray-50 text-sm font-semibold mb-2" for="username">
+                    <label class="block text-gray-50 text-sm font-semibold mb-2" for="name">
+                        Nome
+                    </label>
+                    <input class="border rounded w-full py-2 px-3 text-gray-700" id="name" type="name" placeholder="Digite o seu nome" [(ngModel)]="name" name="name">
+                </div>
+
+                <div class="mb-2">
+                    <label class="block text-gray-50 text-sm font-semibold mb-2" for="email">
                         Email
                     </label>
-                    <input class="border rounded w-full py-2 px-3 text-gray-700" id="username" type="username" placeholder="***********" [(ngModel)]=" username" name="username">
+                    <input class="border rounded w-full py-2 px-3 text-gray-700" id="email" type="email" placeholder="Digite o seu email" [(ngModel)]="email" name="email">
                 </div>
 
                 <div class="mb-2">
                     <label class="block text-gray-50 text-sm font-semibold mb-2" for="password">
                         Senha
                     </label>
-                    <input class="border rounded w-full py-2 px-3 text-gray-700" id="password" type="password" placeholder="***********" [(ngModel)]=" password" name="password">
+                    <input class="border rounded w-full py-2 px-3 text-gray-700" id="password" type="password" placeholder="***********" [(ngModel)]="password" name="password">
                 </div>
 
                 <app-button text="Cadastrar" type="submit" />

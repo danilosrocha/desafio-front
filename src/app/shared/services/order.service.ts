@@ -30,6 +30,10 @@ export class OrderService {
   deleteOrder(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
+
+  concludeOrder(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/conclude/${id}`);
+  }
 }
 
 export interface IOrderPayload {
