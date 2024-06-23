@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
     <div class="text-black modal-overlay" *ngIf="isVisible" (click)="close()">
       <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
-          <h1 class="modal-title">{{text}}</h1>
+          <p class="modal-title">{{text}}</p>
           <button class="close-button" (click)="close()">&times;</button>
         </div>
         <div class="modal-body text-black">

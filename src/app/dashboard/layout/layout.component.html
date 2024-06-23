@@ -1,12 +1,13 @@
 <div class="text-white h-screen flex flex-col">
     <div class="h-[60px] flex justify-between items-center p-8 bg-gray-800">
-        <p routerLink="/" class="text-xl font-bold cursor-pointer p-2">
+        <p routerLink="/" class="text-2xl cursor-pointer ">
             Gestão de comércio
         </p>
         <nav>
             <a routerLink="/empresa" class="bg-blue-500 rounded-md p-2 text-white mr-4 hover:bg-blue-600 transition-all">Empresas</a>
             <a routerLink="/produto" class="bg-blue-500 rounded-md p-2 text-white mr-4 hover:bg-blue-600 transition-all">Produtos</a>
             <a routerLink="/cliente" class="bg-blue-500 rounded-md p-2 text-white mr-4 hover:bg-blue-600 transition-all">Clientes</a>
+            <a routerLink="/pedido" class="bg-blue-500 rounded-md p-2 text-white mr-4 hover:bg-blue-600 transition-all">Pedidos</a>
             <a (click)="logout()" class="text-white cursor-pointer ">Sair</a>
         </nav>
     </div>

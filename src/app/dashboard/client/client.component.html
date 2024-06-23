@@ -1,6 +1,6 @@
 <div class="container gap-4 mx-auto p-2 ">
     <header class="flex justify-between">
-        <h3 class="text-2xl font-semibold">Produtos</h3>
+        <h3 class="text-2xl font-semibold">Clientes</h3>
         <app-button (click)="openModal('CREATE')" text="Cadastrar" />
     </header>
 
@@ -12,10 +12,10 @@
                         Nome
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Descrição
+                        Email
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Preço
+                        Telefone
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Empresa
@@ -25,17 +25,17 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                <tr *ngFor="let product of products">
-                    <td class="px-6 py-4 whitespace-nowrap">{{ product.name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ product.description }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ product.price }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ getCorporateNameForProduct(product.company) }}</td>
+                <tr *ngFor="let client of clients">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ client.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ client.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ client.telephone }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ getCorporateNameForClient(client.company) }}</td>
 
                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2" (click)="openModal('UPDATE',product)">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2" (click)="openModal('UPDATE', client)">
                             Atualizar
                         </button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" (click)="confirmDelete(product)">
+                        <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" (click)="confirmDelete(client)">
                             Deletar
                         </button>
                     </td>
@@ -45,38 +45,38 @@
     </main>
 
     <app-modal [text]="modalText" [isVisible]="isModalVisible" (closeModal)="closeModal()">
-        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
             <div class="mb-2">
                 <label class="text-md font-semibold mb-2" for="name">Nome:</label>
                 <input class="border rounded w-full py-2 px-3 text-gray-700" id="name" formControlName="name" />
             </div>
             <div class="mb-2">
-                <label class="text-md font-semibold mb-2" for="description">Descrição:</label>
-                <input class="border rounded w-full py-2 px-3 text-gray-700" id="description" formControlName="description" />
+                <label class="text-md font-semibold mb-2" for="email">Email:</label>
+                <input class="border rounded w-full py-2 px-3 text-gray-700" id="email" formControlName="email" />
             </div>
             <div class="mb-2">
-                <label class="text-md font-semibold mb-2" for="cnpj">Preço:</label>
-                <input class="border rounded w-full py-2 px-3 text-gray-700" id="price" formControlName="price" />
+                <label class="text-md font-semibold mb-2" for="cnpj">Telefone:</label>
+                <input class="border rounded w-full py-2 px-3 text-gray-700" id="telephone" formControlName="telephone" />
             </div>
 
             <div class="mb-2">
-                <label class="text-md font-semibold mb-2" for="selectedCompany">Selecione a Empresa:</label>
-                <select class="border rounded w-full py-2 px-3 text-gray-700" id="selectedCompany" formControlName="company">
+                <label class="text-md font-semibold mb-2" for="company">Selecione a Empresa:</label>
+                <select class="border rounded w-full py-2 px-3 text-gray-700" id="company" formControlName="company">
                     <option *ngFor="let company of companies" [value]="company._id">{{ company.corporateName }} - {{ company.companyName }}</option>
                 </select>
             </div>
 
             <div class="flex gap-2 justify-end">
-                <button class="bg-blue-950 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded" type="submit" [disabled]="productForm.invalid">{{ action === 'CREATE' ? 'Cadastrar' : 'Atualizar' }}</button>
+                <button class="bg-blue-950 hover:bg-blue-900 text-white font-semibold py-2 px-4 rounded" type="submit" [disabled]="clientForm.invalid">{{ action === 'CREATE' ? 'Cadastrar' : 'Atualizar' }}</button>
                 <button class="bg-red-500 hover:bg-red-400 text-white font-semibold py-2 px-4 rounded" (click)="closeModal()">Cancelar</button>
             </div>
         </form>
     </app-modal>
 
     <app-modal [text]="deleteModalText" [isVisible]="isDeleteModalVisible" (closeModal)="cancelDelete()">
-        <p>Tem certeza que deseja excluir este produto?</p>
+        <p>Tem certeza que deseja excluir este cliente?</p>
         <div class="flex gap-2 justify-end mt-4">
-            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" (click)="deleteProduct()">Confirmar</button>
+            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" (click)="deleteClient()">Confirmar</button>
             <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" (click)="cancelDelete()">Cancelar</button>
         </div>
     </app-modal>

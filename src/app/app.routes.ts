@@ -6,6 +6,8 @@ import { JwtGuard } from './_guard/jwt.guard';
 import { CompanyComponent } from './dashboard/company/company.component';
 import { LayoutComponent } from './dashboard/layout/layout.component';
 import { ProductComponent } from './dashboard/product/product.component';
+import { ClientComponent } from './dashboard/client/client.component';
+import { OrderComponent } from './dashboard/order/order.component';
 
 export const routes: Routes = [
     {
@@ -30,7 +32,8 @@ export const routes: Routes = [
             { path: '', component: HomeComponent },
             { path: 'empresa', component: CompanyComponent },
             { path: 'produto', component: ProductComponent },
-            // { path: 'cliente', component: ClienteComponent }
+            { path: 'cliente', component: ClientComponent },
+            { path: 'pedido', component: OrderComponent }
         ],
         data: { isPrivate: true }
     },
